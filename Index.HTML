@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --glass-bg: rgba(20, 20, 20, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-blur: blur(24px);
+      --text-main: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.7);
+      --input-bg: rgba(0, 0, 0, 0.3);
+      --input-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+      margin: 0 !important;
+      font-family: 'Inter', sans-serif !important;
+      background-color: #1a1a1a !important;
+      background-image: url('<?= bgImageUrl ?>') !important;
+      background-size: cover !important; 
+      background-position: center center !important;
+      background-attachment: fixed !important;
+      background-repeat: no-repeat !important;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .dashboard-container {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 1600px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .dashboard-header {
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .dashboard-header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
+
+    .header-actions { display: flex; align-items: center; gap: 16px; }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .action-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      padding: 30px 40px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .form-grid::-webkit-scrollbar { width: 6px; }
+    .form-grid::-webkit-scrollbar-track { background: transparent; }
+    .form-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 10px; }
+
+    .column { display: flex; flex-direction: column; gap: 20px; }
+
+    .glass-panel {
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+    }
+
+    label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    input, select, textarea {
+      width: 100%; padding: 12px 14px; background: var(--input-bg);
+      border: 1px solid var(--input-border); border-radius: 10px;
+      box-sizing: border-box; font-family: inherit; font-size: 14px; color: var(--text-main);
+      outline: none; transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus { border-color: rgba(255, 255, 255, 0.6); background: rgba(0, 0, 0, 0.4); }
+    input::placeholder, textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
+    select option { background: #2a2a2a; color: #ffffff; padding: 10px; }
+    textarea { resize: none; height: 140px; line-height: 1.5; }
+
+    .preview-container {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      color: #3c4043;
+      font-family: 'Roboto', Arial, sans-serif;
+      height: 100%;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+    
+    .chat-card {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .chat-header { display: flex; padding: 16px; align-items: center; gap: 16px; }
+    .chat-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover;}
+    .chat-title { font-weight: 500; font-size: 14px; margin:0;}
+    .chat-body { padding: 0 16px 16px; font-size: 14px; white-space: pre-wrap; line-height: 1.4; color: #202124;}
+    .chat-mentions { color: #1a73e8; font-weight: 500; margin-top: 8px; display: block; }
+    .chat-image { width: 100%; max-height: 250px; object-fit: cover; border-top: 1px solid #e8eaed; display: none; }
+
+    .dispatch-btn {
+      margin-top: auto; width: 100%; padding: 16px;
+      background: linear-gradient(90deg, #1a1a1a, #333333); color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px;
+      font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500;
+      cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .dispatch-btn:hover { background: linear-gradient(90deg, #2a2a2a, #444444); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.4); }
+    .dispatch-btn:disabled { background: rgba(0, 0, 0, 0.3); color: var(--text-muted); cursor: not-allowed; transform: none; }
+
+    #scheduleDiv { display: none; margin-top: 16px; }
+    #status { margin-top: 10px; text-align: center; font-weight: 500; font-size: 13px; padding: 10px; border-radius: 12px; display: none; backdrop-filter: blur(10px); }
+    .success { display: block !important; background: rgba(52, 168, 83, 0.2); border: 1px solid rgba(52, 168, 83, 0.4); color: #c8e6c9; }
+    .error { display: block !important; background: rgba(234, 67, 53, 0.2); border: 1px solid rgba(234, 67, 53, 0.4); color: #ffcdd2; }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>Enterprise Workspace</h1>
+      <div class="header-actions">
+        <a href="https://lookerstudio.google.com/" target="_blank" class="action-btn">📊 Analytics</a>
+        <button type="button" class="action-btn" onclick="openAdminPanel()">⚙️ Background</button>
+      </div>
+    </div>
+    
+    <form id="reminderForm" onsubmit="submitForm(event)" class="form-grid">
+      
+      <!-- COLUMN 1: Target Space & Configuration -->
+      <div class="column">
+        <div class="glass-panel">
+          <label for="space">Target Space</label>
+          <select id="space" name="space" required>
+            <option value="VM CM">VM CM</option>
+            <option value="VM EOD">VM EOD</option>
+            <option value="CM EOD">CM EOD</option>
+          </select>
+        </div>
+
+        <div class="glass-panel">
+          <label for="template">Quick Fill Templates</label>
+          <select id="template" onchange="loadTemplate()">
+            <option value="">-- Start from scratch --</option>
+            <option value="general">Weekly Report Reminder</option>
+            <option value="pkt">Monthly PKT Notice</option>
+            <option value="announcement">Townhall Announcement</option>
+            <option value="kudos">Team Target Kudos</option>
+            <option value="rewards">Employee Reward Recognition</option>
+            <option value="incident">System Outage Alert</option>
+            <option value="welcome">New Hire Welcome</option>
+          </select>
+        </div>
+
+        <div class="glass-panel">
+          <label for="type">Message Category</label>
+          <select id="type" name="type" required onchange="updatePreview()">
+            <option value="General Reminder">General Reminder</option>
+            <option value="Monthly PKT">Monthly PKT</option>
+            <option value="Announcement">Announcement</option>
+            <option value="Kudos">Kudos</option>
+            <option value="Rewards & Recognition">Rewards & Recognition</option>
+            <option value="Incident / Outage Alert">Incident / Outage Alert</option>
+            <option value="Poll / Feedback Request">Poll / Feedback Request</option>
+            <option value="Welcome / Onboarding">Welcome / Onboarding</option>
+            <option value="Process Update">Process Update</option>
+          </select>
+        </div>
+
+        <div class="glass-panel">
+          <label for="timing">Execution Timing</label>
+          <select id="timing" name="timing" onchange="toggleSchedule()" required>
+            <option value="now">Immediate Dispatch</option>
+            <option value="later">Schedule for Future</option>
+          </select>
+          <div id="scheduleDiv">
+            <label for="scheduleDate">Select Date & Time</label>
+            <input type="datetime-local" id="scheduleDate" name="scheduleDate">
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: Message Content -->
+      <div class="column">
+        <div class="glass-panel" style="flex-grow: 1; display: flex; flex-direction: column;">
+          <label for="message">Payload Content</label>
+          <textarea id="message" name="message" placeholder="Draft your message..." required oninput="updatePreview()"></textarea>
+
+          <label for="mentions" style="margin-top: 15px;">@Mentions</label>
+          <input type="text" id="mentions" name="mentions" placeholder="e.g., <users/all>" oninput="updatePreview()">
+
+          <label for="imageUrl" style="margin-top: 15px;">Media URL Attachment</label>
+          <input type="text" id="imageUrl" name="imageUrl" placeholder="e.g., https://media.giphy.com/example.gif" oninput="updatePreview()">
+
+          <div id="status"></div>
+        </div>
+        <button type="submit" id="submitBtn" class="dispatch-btn">Dispatch Payload →</button>
+      </div>
+
+      <!-- COLUMN 3: Live Preview -->
+      <div class="column">
+        <div class="glass-panel" style="padding:0; border: none; background: transparent; box-shadow: none; height: 100%;">
+          <label style="color: white; margin-bottom: 10px;">Live Card Preview</label>
+          <div class="preview-container">
+            <div class="chat-card">
+              <div class="chat-header">
+                <img id="prev-icon" class="chat-icon" src="https://fonts.gstatic.com/s/i/googlematerialicons/notifications_active/v1/color-24dp/1x/baseline_notifications_active_color_24dp.png">
+                <div>
+                  <div id="prev-title" class="chat-title" style="color: #1a73e8;">📅 General Reminder</div>
+                </div>
+              </div>
+              <div class="chat-body">
+                <span id="prev-msg">Draft your message...</span>
+                <span id="prev-mentions" class="chat-mentions"></span>
+              </div>
+              <img id="prev-img" class="chat-image" src="">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    var currentBgUrl = "<?= bgImageUrl ?>";
+
+    var categoryData = {
+      'General Reminder': { color: '#1a73e8', icon: 'notifications_active', title: '📅 General Reminder' },
+      'Monthly PKT': { color: '#34a853', icon: 'assessment', title: '📈 Monthly PKT' },
+      'Announcement': { color: '#ea4335', icon: 'campaign', title: '📢 Announcement' },
+      'Kudos': { color: '#fbbc04', icon: 'celebration', title: '🎉 Kudos! Awesome Job!' },
+      'Rewards & Recognition': { color: '#f29900', icon: 'emoji_events', title: '🏆 Rewards & Recognition' },
+      'Incident / Outage Alert': { color: '#d93025', icon: 'warning', title: '🚨 Incident Alert' },
+      'Poll / Feedback Request': { color: '#1a73e8', icon: 'poll', title: '📊 Feedback Request' },
+      'Welcome / Onboarding': { color: '#34a853', icon: 'waving_hand', title: '👋 Welcome to the Team!' },
+      'Process Update': { color: '#9334e6', icon: 'lightbulb', title: '💡 Process Update' }
+    };
+
+    var templates = {
+      "general": { type: "General Reminder", message: "Friendly reminder: Please submit your weekly reports by end of day today!", imageUrl: "https://media.giphy.com/media/l41lFw057lAJQMwg0/giphy.gif" },
+      "pkt": { type: "Monthly PKT", message: "It is time for our Monthly PKT! Please review the materials and complete the assessment by Friday.", imageUrl: "" },
+      "announcement": { type: "Announcement", message: "Townhall meeting starting in 15 minutes! Please join the Google Meet link.", imageUrl: "" },
+      "kudos": { type: "Kudos", message: "Shoutout to the team for hitting our targets this week! Outstanding effort across the board!", imageUrl: "https://media.giphy.com/media/3oz8xAFtjouKVsG7sY/giphy.gif" },
+      "rewards": { type: "Rewards & Recognition", message: "Congratulations to [Name] for being awarded the [Award Name]! Thank you for your hard work.", imageUrl: "https://media.giphy.com/media/xT0xezQGU5xCDJuCPe/giphy.gif" },
+      "incident": { type: "Incident / Outage Alert", message: "ALERT: We are currently experiencing an issue with [System]. Engineering is investigating.", imageUrl: "" },
+      "welcome": { type: "Welcome / Onboarding", message: "Please join me in welcoming [Name] to the team! We are thrilled to have you here.", imageUrl: "https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif" }
+    };
+
+    function updatePreview() {
+      var typeSelect = document.getElementById('type');
+      if (!typeSelect) return;
+      
+      var type = typeSelect.value;
+      var msg = document.getElementById('message').value || "Draft your message...";
+      var mentions = document.getElementById('mentions').value;
+      var imgUrl = document.getElementById('imageUrl').value;
+      
+      var config = categoryData[type] || categoryData['General Reminder'];
+      
+      document.getElementById('prev-title').innerText = config.title;
+      document.getElementById('prev-title').style.color = config.color;
+      document.getElementById('prev-icon').src = "https://fonts.gstatic.com/s/i/googlematerialicons/" + config.icon + "/v1/color-24dp/1x/baseline_" + config.icon + "_color_24dp.png";
+      
+      document.getElementById('prev-msg').innerText = msg;
+      document.getElementById('prev-mentions').innerText = mentions ? '\n' + mentions : '';
+      
+      var imgEl = document.getElementById('prev-img');
+      if (imgUrl.match(/\.(jpeg|jpg|gif|png)$/i) || imgUrl.indexOf('unsplash') !== -1 || imgUrl.indexOf('giphy') !== -1) {
+        imgEl.src = imgUrl;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+    }
+
+    function loadTemplate() {
+      var selected = document.getElementById('template').value;
+      if (selected && templates[selected]) {
+        document.getElementById('type').value = templates[selected].type;
+        document.getElementById('message').value = templates[selected].message;
+        document.getElementById('imageUrl').value = templates[selected].imageUrl;
+      } else {
+        document.getElementById('message').value = "";
+        document.getElementById('imageUrl').value = "";
+      }
+      updatePreview();
+    }
+
+    function openAdminPanel() {
+      var newUrl = prompt("Enter Direct URL for HD Background Image:\n(It will save globally for all users)", currentBgUrl);
+      if (newUrl && newUrl.trim() !== "" && newUrl !== currentBgUrl) {
+        document.body.style.backgroundImage = "url('" + newUrl + "')";
+        google.script.run.withSuccessHandler(function(res) { if(res.success) alert(res.message); }).saveAdminBackground(newUrl.trim());
+      }
+    }
+
+    function toggleSchedule() {
+      var timing = document.getElementById('timing').value;
+      var scheduleDiv = document.getElementById('scheduleDiv');
+      var submitBtn = document.getElementById('submitBtn');
+      var scheduleInput = document.getElementById('scheduleDate');
+      if (timing === 'later') {
+        scheduleDiv.style.display = 'block'; submitBtn.innerText = "Schedule Payload →"; scheduleInput.required = true;
+      } else {
+        scheduleDiv.style.display = 'none'; submitBtn.innerText = "Dispatch Payload →"; scheduleInput.required = false; scheduleInput.value = "";
+      }
+    }
+
+    function submitForm(event) {
+      event.preventDefault();
+      var btn = document.getElementById('submitBtn');
+      var statusDiv = document.getElementById('status');
+      
+      var formData = {
+        space: document.getElementById('space').value,
+        timing: document.getElementById('timing').value,
+        scheduleDate: document.getElementById('scheduleDate').value,
+        type: document.getElementById('type').value,
+        message: document.getElementById('message').value,
+        mentions: document.getElementById('mentions').value,
+        imageUrl: document.getElementById('imageUrl').value
+      };
+
+      btn.disabled = true; btn.innerText = "Authenticating & Sending...";
+      statusDiv.innerHTML = ""; statusDiv.className = "";
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          btn.disabled = false; toggleSchedule(); 
+          if (response.success) {
+            statusDiv.innerHTML = response.message; statusDiv.className = "success";
+            document.getElementById('reminderForm').reset(); toggleSchedule(); updatePreview();
+          } else {
+            statusDiv.innerHTML = response.message; statusDiv.className = "error";
+          }
+        })
+        .withFailureHandler(function(error) {
+          btn.disabled = false; toggleSchedule();
+          statusDiv.innerHTML = "Network communication failed. Please try again."; statusDiv.className = "error";
+        })
+        .processSubmission(formData);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updatePreview();
+    });
+  </script>
+</body>
+</html>
