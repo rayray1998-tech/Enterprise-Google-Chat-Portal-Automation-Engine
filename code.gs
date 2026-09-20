@@ -1,8 +1,8 @@
 // MULTI-SPACE WEBHOOK CONFIGURATION
 const WEBHOOK_URLS = {
-  'VM CM': 'https://chat.googleapis.com/v1/spaces/AAAAAlZa_LQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Ae3KM8N48boQs7TuVOZwHWUHnJbIo51Ybx9Xo0WyeG0',
-  'VM EOD': 'https://chat.googleapis.com/v1/spaces/AAQApm1A-GA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=z0F1l98YtBOZlGGZZkUgmCG2Sq1TO8errv-IuGIIag8',
-  'CM EOD': 'https://chat.googleapis.com/v1/spaces/AAQA7Y12Yl0/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=N1-mx_SRoItU4UJI8BjxiwtgguJBxwF1CYVhc8Z2To4'
+  'CHAT SPACE': 'PLACE YOUR WEBHOOK HERE',
+  'CHAT SPACE': 'PLACE YOUR WEBHOOK HERE',
+  'CHAT SPACE': 'PLACE YOUR WEBHOOK HERE'
 };
 
 const DATABASE_SHEET_URL = 'PASTE_YOUR_GOOGLE_SHEET_URL_HERE'; 
